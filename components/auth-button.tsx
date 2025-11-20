@@ -1,18 +1,41 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import { LogoutButton } from "./logout-button";
+import { useEffect, useState } from "react";
+import { type User } from "@supabase/supabase-js";
 
-export async function AuthButton() {
-  const supabase = await createClient();
+export function AuthButton() {
+  const [user, setUser] = useState<User | null>(null);
+  const supabase = createClient();
 
-  // You can also use getUser() which will be slower.
-  const { data } = await supabase.auth.getClaims();
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
 
-  const user = data?.claims;
+    // initial check
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase.auth]);
 
   return user ? (
     <div className="flex items-center gap-4">
+      <Button asChild size="sm" variant={"outline"}>
+        <Link href="/notes">Notes</Link>
+      </Button>
+      <Button asChild size="sm" variant={"outline"}>
+        <Link href="/protected">Protected</Link>
+      </Button>
       Hey, {user.email}!
       <LogoutButton />
     </div>
