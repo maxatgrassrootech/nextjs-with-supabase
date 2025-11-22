@@ -29,18 +29,15 @@ export function AuthButton() {
   }, [supabase.auth]);
 
   return user ? (
-    <div className="flex items-center gap-4">
-      {/* <Button asChild size="sm" variant={"outline"}>
-        <Link href="/notes">Notes</Link>
-      </Button> */}
+    <div className="flex flex-col items-center md:flex-row md:items-center gap-4">
       <Button asChild size="sm" variant={"outline"}>
         <Link href="/protected">Protected</Link>
       </Button>
-      Hey, {user.email}!
+      <span>Welcome, {user.email}!</span>
       <LogoutButton />
     </div>
   ) : (
-    <div className="flex gap-2">
+    <div className="flex flex-col items-center md:flex-row gap-2 md:items-center">
       <Button asChild size="sm" variant={"outline"}>
         <Link href="/auth/login">Sign in</Link>
       </Button>

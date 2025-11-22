@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState, Suspense } from "react";
+import Link from "next/link";
 
 type Member = {
   id: number;
@@ -237,8 +238,14 @@ function EditScheduleForm() {
   const [oldTeacher, setOldTeacher] = useState<string>("");
   const [newTeacher, setNewTeacher] = useState<string>("");
   const [message, setMessage] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserEmail(user?.email ?? null);
+    });
+
     // Generate Sundays
     const sundaysList = [];
     // Use UTC to avoid timezone issues
@@ -315,6 +322,21 @@ function EditScheduleForm() {
       if (updatedData) {
         setOldTeacher((updatedData as any)[selectedStudent]);
       }
+
+      // Send emails
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail,
+          oldTeacher,
+          newTeacher,
+          student: selectedStudent,
+          date: selectedSunday,
+        }),
+      });
     }
   };
 
@@ -376,6 +398,13 @@ function EditScheduleForm() {
           Update Schedule
         </button>
       </form>
+      <div className="mt-4">
+        <Link href="/">
+          <button className="border p-2 mt-2 hover:bg-gray-500">
+            Go Back to Home
+          </button>
+        </Link>
+      </div>
       {message && <p>{message}</p>}
       <div className="h-32">&nbsp;</div>
     </div>
@@ -386,7 +415,9 @@ export default function ProtectedPage() {
   return (
     <div className="flex-1 w-full flex flex-col gap-1 p-4">
       <Suspense fallback={<p>Loading...</p>}>
-        <MemberLinker />
+        <div className="text-center">
+          <MemberLinker />
+        </div>
       </Suspense>
       <EditScheduleForm />
     </div>

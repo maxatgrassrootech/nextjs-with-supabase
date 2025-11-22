@@ -4,11 +4,6 @@ import { Suspense } from "react";
 
 async function SchedulesList() {
   const supabase = await createClient();
-  const { data: rows } = await supabase
-    .from("schedules")
-    .select()
-    .order("Date", { ascending: true });
-
   const headers = [
     "Date",
     "Dana",
@@ -24,15 +19,20 @@ async function SchedulesList() {
     "Audrey2",
   ];
 
+  const { data: rows } = await supabase
+    .from("schedules")
+    .select(`id,${headers.join(",")}`)
+    .order("Date", { ascending: true });
+
   return (
     <div className="w-full p-5">
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
-          <tr className="bg-gray-100 border-b">
+          <tr className="bg-gray-300 border-b">
             {headers.map((header) => (
               <th
                 key={header}
-                className="text-left py-3 px-4 font-semibold text-sm"
+                className="text-left py-3 px-4 font-semibold text-sm border border-gray-200"
               >
                 {header}
               </th>
@@ -44,11 +44,14 @@ async function SchedulesList() {
             <tr
               key={schedule.id}
               className={`${
-                index % 2 === 0 ? "bg-gray-50" : "bg-white"
-              } hover:bg-gray-200`}
+                index % 2 === 0 ? "bg-gray-100" : "bg-white"
+              } hover:bg-green-200`}
             >
               {headers.map((header) => (
-                <td key={header} className="text-left py-3 px-4">
+                <td
+                  key={header}
+                  className="text-left py-3 px-4 border border-gray-200"
+                >
                   {schedule[header]}
                 </td>
               ))}
