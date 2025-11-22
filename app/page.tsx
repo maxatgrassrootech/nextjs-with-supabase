@@ -1,25 +1,79 @@
-import { DeployButton } from "@/components/deploy-button";
-import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
-import { Hero } from "@/components/hero";
+import { createClient } from "@/lib/supabase/server";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
-import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
-import { hasEnvVars } from "@/lib/utils";
-import Link from "next/link";
 import { Suspense } from "react";
+
+async function SchedulesList() {
+  const supabase = await createClient();
+  const { data: rows } = await supabase
+    .from("schedules")
+    .select()
+    .order("Date", { ascending: true });
+
+  const headers = [
+    "Date",
+    "Dana",
+    "Benjamin",
+    "Christina",
+    "MaxLee",
+    "Raymond",
+    "Boyan1",
+    "Boyan2",
+    "Muduo1",
+    "Muduo2",
+    "Audrey1",
+    "Audrey2",
+  ];
+
+  return (
+    <div className="w-full p-5">
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr className="bg-gray-100 border-b">
+            {headers.map((header) => (
+              <th
+                key={header}
+                className="text-left py-3 px-4 font-semibold text-sm"
+              >
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="text-gray-700">
+          {(rows ?? []).map((schedule: any, index: number) => (
+            <tr
+              key={schedule.id}
+              className={`${
+                index % 2 === 0 ? "bg-gray-50" : "bg-white"
+              } hover:bg-gray-200`}
+            >
+              {headers.map((header) => (
+                <td key={header} className="text-left py-3 px-4">
+                  {schedule[header]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center">
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
-        <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
+        <Suspense>
+          <SchedulesList />
+        </Suspense>
+        {/* <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
           <Hero />
           <main className="flex-1 flex flex-col gap-6 px-4">
             <h2 className="font-medium text-xl mb-4">Next steps</h2>
             {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
           </main>
-        </div>
+        </div> */}
 
         <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
           <p>Created by Max Li for Philly Ministry of CBCGB with love</p>

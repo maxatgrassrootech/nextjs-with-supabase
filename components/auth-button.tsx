@@ -30,9 +30,9 @@ export function AuthButton() {
 
   return user ? (
     <div className="flex items-center gap-4">
-      <Button asChild size="sm" variant={"outline"}>
+      {/* <Button asChild size="sm" variant={"outline"}>
         <Link href="/notes">Notes</Link>
-      </Button>
+      </Button> */}
       <Button asChild size="sm" variant={"outline"}>
         <Link href="/protected">Protected</Link>
       </Button>
