@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/remind-teachers",
+      "schedule": "0 13 * * 4"
+    }
+  ]
+}
