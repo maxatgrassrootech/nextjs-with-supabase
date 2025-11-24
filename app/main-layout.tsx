@@ -13,7 +13,7 @@ export default function MainLayout({
   return (
     <>
       <RootNavBar isOpen={isOpen} setIsOpen={setIsOpen} />
-      <main className={isOpen ? "mt-40" : ""}>{children}</main>
+      <main className={isOpen ? "mt-48" : ""}>{children}</main>
     </>
   );
 }
