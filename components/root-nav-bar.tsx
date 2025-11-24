@@ -27,11 +27,21 @@ export default function RootNavBar({
             <Link href={"/"}>Home</Link>
           </Button>
         </div>
+        <div className="flex-1 flex justify-center items-center gap-5 font-semibold"></div>
         <div className="hidden md:flex">
           {!hasEnvVars ? (
             <EnvVarWarning />
           ) : (
             <Suspense>
+              <Button
+                asChild
+                size="sm"
+                variant={"outline"}
+                className="hidden md:flex"
+              >
+                <Link href={"/protected/members"}>View Members</Link>
+              </Button>
+              &nbsp;
               <AuthButton />
             </Suspense>
           )}
@@ -58,13 +68,25 @@ export default function RootNavBar({
       {isOpen && (
         <div className="md:hidden absolute top-16 left-0 w-full bg-white border-b p-4 z-10">
           <div className="flex flex-col items-center gap-4">
-            <Link
-              href={"/"}
-              className="py-2 px-3 flex rounded-md no-underline bg-white hover:bg-gray-100 border border-gray-200"
-            >
-              Home
-            </Link>
+            <Button asChild variant="ghost">
+              <Link
+                href={"/"}
+                className="py-2 px-3 flex rounded-md no-underline bg-white hover:bg-gray-100 border border-gray-200"
+              >
+                Home
+              </Link>
+            </Button>
+
             <Suspense>
+              <Button asChild variant="ghost">
+                <Link
+                  href={"/protected/members"}
+                  className="py-2 px-3 flex rounded-md no-underline bg-white hover:bg-gray-100 border border-gray-200"
+                >
+                  View Members
+                </Link>
+              </Button>
+              &nbsp;
               <AuthButton />
             </Suspense>
           </div>
