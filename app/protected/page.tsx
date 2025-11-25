@@ -160,7 +160,7 @@ function MemberLinker() {
       if (data && data.length > 0) {
         alert("Member linked successfully!");
         console.log("Update successful, returned data:", data);
-        setLinkedMember(data); // Use the returned data to be sure
+        setLinkedMember(data[0]); // Use the returned data to be sure
         setMembers([]); // Clear the list of unlinked members
         setSelectedMember(null);
       } else {
