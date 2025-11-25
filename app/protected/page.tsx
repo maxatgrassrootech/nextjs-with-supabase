@@ -376,7 +376,7 @@ function EditScheduleForm() {
         </div>
         {selectedSunday && selectedStudent && (
           <div>
-            <p>Old Teacher: {oldTeacher}</p>
+            <p>Currently Assigned Teacher: {oldTeacher}</p>
           </div>
         )}
         <div>
