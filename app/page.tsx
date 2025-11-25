@@ -19,9 +19,11 @@ async function SchedulesList() {
     "Audrey2",
   ];
 
+  const today = new Date().toISOString().slice(0, 10);
   const { data: rows } = await supabase
     .from("schedules")
     .select(`id,${headers.join(",")}`)
+    .gte("Date", today)
     .order("Date", { ascending: true });
 
   return (

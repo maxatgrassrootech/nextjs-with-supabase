@@ -161,7 +161,7 @@ function MemberLinker() {
       if (data && data.length > 0) {
         alert("Member linked successfully!");
         console.log("Update successful, returned data:", data);
-        setLinkedMember(data[0]); // Use the returned data to be sure
+        setLinkedMember(data); // Use the returned data to be sure
         setMembers([]); // Clear the list of unlinked members
         setSelectedMember(null);
       } else {
@@ -246,23 +246,23 @@ function EditScheduleForm() {
       setUserEmail(user?.email ?? null);
     });
 
-    // Generate Sundays
-    const sundaysList = [];
-    // Use UTC to avoid timezone issues
-    let currentDate = new Date(Date.UTC(2025, 10, 23)); // November is month 10
-    const endDate = new Date(Date.UTC(2026, 11, 31)); // December is month 11
+    const fetchSundays = async () => {
+      const supabase = createClient();
+      const today = new Date().toISOString().split("T");
+      const { data, error } = await supabase
+        .from("schedules")
+        .select("Date")
+        .gte("Date", today)
+        .order("Date", { ascending: true });
 
-    // Find the first Sunday on or after the start date
-    while (currentDate.getUTCDay() !== 0) {
-      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
-    }
+      if (error) {
+        console.error("Error fetching Sundays:", error);
+      } else {
+        setSundays(data.map((s: any) => s.Date));
+      }
+    };
 
-    // Add all subsequent Sundays until the end date
-    while (currentDate <= endDate) {
-      sundaysList.push(currentDate.toISOString().split("T")[0]);
-      currentDate.setUTCDate(currentDate.getUTCDate() + 7);
-    }
-    setSundays(sundaysList);
+    fetchSundays();
 
     // Fetch students from a predefined list or another source
     setStudents([
