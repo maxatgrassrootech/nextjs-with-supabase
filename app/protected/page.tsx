@@ -1,5 +1,4 @@
 "use client";
-
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
