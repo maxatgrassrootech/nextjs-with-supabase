@@ -101,8 +101,7 @@ export async function GET() {
     const assignmentsListHtml = assignments
       .map(
         ({ student, teacher }) =>
-          `<li><strong>${student}:</strong> ${
-            teacher || "No teacher assigned"
+          `<li><strong>${student}:</strong> ${teacher || "No teacher assigned"
           }</li>`
       )
       .join("");
@@ -123,7 +122,8 @@ export async function GET() {
       resend.emails.send({
         from: "onboarding@resend.dev", // Update this if you have a custom domain
         to: email,
-        subject: `Teaching Schedule Reminder: ${dateString}`,
+        replyTo: "max.li@live.com",
+        subject: `Philly Ministry Teaching Schedule Reminder: ${dateString}`,
         html: emailHtml,
       })
     );
